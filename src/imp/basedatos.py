@@ -1,21 +1,19 @@
 import sqlite3
-from abs.absDataBase import AbstactClassDB
+from src.imp.base.database import AbstactClassDB
+
 
 class database(AbstactClassDB):
     def __init__(self):
         self.version_SQLite()
         self.crear_tablas()
-        #creai y coneccion
+        # creai y coneccion
         pass
-
 
     def save_list(self, lisofchannels, bool):
         pass
 
-
     def get_list(self, bool):
         pass
-
 
     def version_SQLite(self):
         try:
@@ -36,7 +34,7 @@ class database(AbstactClassDB):
                 #print('Conexion a SQLite cerrada\n')
 
     def crear_tablas(self):
-        #TablaUSUARIOS
+        # TablaUSUARIOS
         try:
             conexion = sqlite3.connect('api_twitch.db')
             cursor = conexion.cursor()
@@ -62,11 +60,11 @@ class database(AbstactClassDB):
                 conexion.close()
                 #print('Conexion a SQLite cerrada\n')
 
-    def agregar_usuario(self, id_usuario,nombre_usuaio,ponderacion,bloqueado,recomendado):
+    def agregar_usuario(self, id_usuario, nombre_usuaio, ponderacion, bloqueado, recomendado):
         try:
             conexion = sqlite3.connect('api_twitch.db')
             cursor = conexion.cursor()
-            #print('Conectado')
+            # print('Conectado')
 
             query = """INSERT INTO seguidos VALUES
                     ({}, '{}', '{}', '{}','{}',{})""".format(id_usuario, nombre_usuaio, ponderacion, bloqueado, recomendado)
@@ -76,7 +74,7 @@ class database(AbstactClassDB):
             cursor.close()
 
         except sqlite3.Error as error:
-            print('Error con la conexion',error)
+            print('Error con la conexion', error)
 
         finally:
             if(conexion):
@@ -86,7 +84,7 @@ class database(AbstactClassDB):
         try:
             conexion = sqlite3.connect('api_twitch.db')
             cursor = conexion.cursor()
-            #print('Conectado')
+            # print('Conectado')
 
             query = """SELECT * FROM seguidos"""
             resultado = cursor.execute(query)
@@ -97,26 +95,26 @@ class database(AbstactClassDB):
             cursor.close()
 
         except sqlite3.Error as error:
-            print('Error con la conexion',error)
+            print('Error con la conexion', error)
 
         finally:
             if(conexion):
                 conexion.close()
 
-
     def eliminar_usuario(self, id_usuario):
         try:
             conexion = sqlite3.connect('api_twitch.db')
             cursor = conexion.cursor()
-            #print('Conectado')
+            # print('Conectado')
 
-            query = "DELETE FROM seguidos WHERE id_name = {}".format(id_usuario)
+            query = "DELETE FROM seguidos WHERE id_name = {}".format(
+                id_usuario)
             resultado = cursor.execute(query)
             conexion.commit()
             #print('Valor Eliminado Correctamente', resultado)
             cursor.close()
         except sqlite3.Error as error:
-            print('Error con la conexion',error)
+            print('Error con la conexion', error)
         finally:
             if(conexion):
                 conexion.close()

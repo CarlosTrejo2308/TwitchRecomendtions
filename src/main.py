@@ -1,116 +1,87 @@
-#Main program - User Interface
-import sys
-sys.path.append('classes')
-sys.path.append('imp')
-from BoltFunctional import Bolt
-from mBD import mockBD
-from APIfuncional import apiTwitch
-from basedatos import database
+# Main program - User Interface
+import load_path
+from imp.functional_bolt import FunctionalBolt
+from imp.functional_api import FunctionalTwitch
+from imp.basedatos import database
 
-#Global setting variables
-MOTHER_PATH = "saves\{}.txt"    #Static path name to save options for later
-DEPTH = 1                       #How many layers it is going to calculate (op -> follower -> follower) for today only 1 layer deep
-C_ACTIVITY = False              #Compute and ponder based on the channel activity
-LIMIT_RECOMENDATIONS = 5        #How many channels its going to calculate; -1 for all
-AVOID_BLOCKED = True            #Avoid blocked channels to recomendations (blocked and double recomendations)
-DEBUG = True                    #If true, then print debug information to console
+working_api = FunctionalTwitch()
+db_connection = database()
+functional_bolt = FunctionalBolt(working_api, db_connection)
 
-workingapi = apiTwitch()
-coneccion_bd = database()
-workingbolt = Bolt(workingapi, coneccion_bd)
 
-def getOptions():
-    return """
-    1. Load Options
-    2. Save Options
-    3. Add channel
-    4. Remove channel
-    5. Block channel
-    6. Calculate
-    7. Get Recomendations
-    8. View Channels
-    9. Agregar por usuario
-    0. Quit"""
+def get_options():
+    msg = "\n0. Exit\n"
+    msg += "1. Add Channel\n"
+    msg += "2. Remove Channel\n"
+    msg += "3. Block Channel\n"
+    msg += "4. View Channels\n"
+    msg += "5. Get Recommendations\n"
+    msg += "6. Save Options\n"
+    msg += "7. Load Options"
+    return msg
 
-def getChannel():
-    print("Enter name of channel: ")
-    chan = input(">> ")
+
+def channel_input():
+    print("\nEnter the channel name:")
+    option = input(">> ")
+    return option
+
+
+def get_channel():
+    print("Enter the channel name: ")
+    channel = input(">> ")
     try:
-        workingapi.get_userid(chan)
-        return chan
+        channel = working_api.get_user_id(channel)
     except:
-        print("Hay un problema con este canal, o no hay internet")
-        return -1
+        print("!! Hay un problema con este canal, o no hay internet")
+        channel = None
 
-def takeAction():
-    errors = 0
-    ret = -1
-    while(ret is -1):
-        if errors is 3:
-            print("\nTo many errors!\nHere are the options again:")
-            print(getOptions())
-            errors = 0
+    return channel
 
-        try:
-            #c = input("> ")
-            c = int(input("> "))
-            #DEBUG.append(c)
-            if c <= -1 or c >= 10:
-                print("Out of bounds!")
-                c = -1
-            ret = c
-        except:
-            print("Please only numbers!")
 
-        errors += 1
-    return c
-
-def doAction(comand):
-    if comand is 0:
+def do_action(comand):
+    if comand == 0:
         print("Goodbye!")
         return -1
 
-    elif comand is 1:
-        workingbolt.ls_channel = coneccion_bd.get_list()
+    elif comand == 1:
+        channel = channel_input()
+        functional_bolt.add_channel(channel)
 
-    elif comand is 2:
-        coneccion_bd.save_list(workingbolt.ls_channel)
+    elif comand == 2:
+        channel = channel_input()
+        functional_bolt.remove_channel(channel)
 
-    elif comand >= 3 and comand <= 5:
-        channel = getChannel()
-        if comand is 3:
-            workingbolt.addChanel(channel)
-        elif comand is 4:
-            workingbolt.removeChanel(channel)
-        else:
-            workingbolt.blockChanel(channel)
+    elif comand == 3:
+        channel = channel_input()
+        functional_bolt.block_channel(channel)
 
-    elif comand is 6:
-        workingbolt.calculate()
+    elif comand == 4:
+        functional_bolt.show_channels()
 
-    elif comand is 7:
-        workingbolt.printRecomendations()
+    elif comand == 5:
+        functional_bolt.show_recommendations()
 
-    elif comand is 8:
-        workingbolt.viewChannels()
+    elif comand == 6:
+        db_connection.save_list(functional_bolt.ls_channel)
 
-    elif comand is 9:
-        name = getChannel()
-        workingbolt.getFromUser(name)
+    elif comand == 7:
+        functional_bolt.ls_channel = db_connection.get_list()
+
     else:
-        print("How did you got here? o.O")
+        print("Out of Bounds!\n")
 
-def main(deb):
-    print(getOptions())
-    loop = True
-    while(loop):
-        com = takeAction()
-        salir = doAction(com)
-        
-        if salir is not None:
-            return
-        if deb:
-            loop = False
+
+def main():
+    while(True):
+        print(get_options())
+
+        try:
+            option = int(input(">> "))
+            do_action(option)
+        except:
+            print("Please only numbers!")
+
 
 if __name__ == '__main__':
-    main(False)
+    main()

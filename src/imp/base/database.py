@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 
-class AbstactClassDB(ABC):
-    def __init__(self):
-        super().__init__()
 
+class AbstactClassDB(ABC):
     @abstractmethod
     def save_list(self, lisofchannels, bool):
         pass
