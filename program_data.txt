@@ -1,0 +1,56 @@
+
+  * api web-site:
+  https://python-twitch-client.readthedocs.io/en/latest/basic_usage.html
+
+  * Twitch api:
+  https://dev.twitch.tv/docs/api/
+  https://dev.twitch.tv/docs/api/reference
+
+ -------------------------------------------------------------------------
+
+   E-mail:
+  * gmail: test.twitch.api@gmail.com
+  * password: #twitchAPI123@
+
+   Twitch account:
+  * user_id: 784287120 
+  * username: CyPSTestTwitchAPI
+  * password: #twitchAPI123@
+
+ -------------------------------------------------------------------------
+
+  - application name: CyPS_test_api
+  - OAuth Redirect URL: http://localhost/3000/
+  - application category: Application Integration
+
+  - client_id: 0yb8krhzd429df6ovknk5ax54cv4oj
+  - secret: 69gyszx6d9xwvbc7cjdjew53z48deu
+  - app-access-token (oauth): d6z0n30q8kkgokv96dn6jsjxj55xzi
+
+ -------------------------------------------------------------------------
+  
+  pip install -r requirements.txt
+
+   ** Channels info: ** 
+  - username: ibai           user_id: 83232866
+  - username: auronplay      user_id: 459331509
+  - username: fernanfloo     user_id: 197855687
+  - username: juansguarnizo  user_id: 121510236
+  - username: elded	     user_id: 76385901
+
+   ** Channels - Total followers: **
+    ~ Date: 04/10/2022, Time: 01:34 AM ~
+  - ibai:           9841415
+  - auronplay:      12330451
+  - fernanfloo:     2716858
+  - juansguarnizo:  7698178
+  - elded:          4984070
+
+   ** Channels - Total followings: **
+    ~ Date: 04/11/2022, Time: 04:43 PM ~
+  - ibai:           165
+  - auronplay:      50
+  - fernanfloo:     56
+  - juansguarnizo:  348
+  - elded:          446
+  
