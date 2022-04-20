@@ -1,19 +1,10 @@
-import sys
-sys.path.append('../src/')
-sys.path.append('../src/classes')
-sys.path.append('../src/imp')
-
 import main
 import unittest
 
-from unittest.mock import Mock
-from unittest.mock import patch
-from unittest import TestCase
 import io
 ##################################
-sys.path.append('classes')
-sys.path.append('imp')
-from BoltFunctional import Bolt
+
+from src.imp.functional_bolt import FunctionalBolt
 from mBD import mockBD
 from APIfuncional import apiTwitch
 
