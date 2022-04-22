@@ -15,8 +15,6 @@ class TestChannel(unittest.TestCase):
         self.cToTestEmpty = Channel(id)
         self.cToTestPon = Channel(id, ponderation)
 
-
-
     def testCreate(self):
         params = ({"id": 288302},
         {"id": 3872994, "name": "Carlos"},

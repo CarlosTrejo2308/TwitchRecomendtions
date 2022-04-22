@@ -7,6 +7,7 @@ from mBD import mockBD
 from APIfuncional import apiTwitch
 from basedatos import database
 
+
 #Global setting variables
 MOTHER_PATH = "saves\{}.txt"    #Static path name to save options for later
 DEPTH = 1                       #How many layers it is going to calculate (op -> follower -> follower) for today only 1 layer deep
@@ -45,8 +46,8 @@ def getChannel():
 def takeAction():
     errors = 0
     ret = -1
-    while(ret is -1):
-        if errors is 3:
+    while(ret == -1):
+        if errors == 3:
             print("\nTo many errors!\nHere are the options again:")
             print(getOptions())
             errors = 0
@@ -66,35 +67,35 @@ def takeAction():
     return c
 
 def doAction(comand):
-    if comand is 0:
+    if comand == 0:
         print("Goodbye!")
         return -1
 
-    elif comand is 1:
+    elif comand == 1:
         workingbolt.ls_channel = coneccion_bd.get_list()
 
-    elif comand is 2:
+    elif comand == 2:
         coneccion_bd.save_list(workingbolt.ls_channel)
 
     elif comand >= 3 and comand <= 5:
         channel = getChannel()
-        if comand is 3:
+        if comand == 3:
             workingbolt.addChanel(channel)
-        elif comand is 4:
+        elif comand == 4:
             workingbolt.removeChanel(channel)
         else:
             workingbolt.blockChanel(channel)
 
-    elif comand is 6:
+    elif comand == 6:
         workingbolt.calculate()
 
-    elif comand is 7:
+    elif comand == 7:
         workingbolt.printRecomendations()
 
-    elif comand is 8:
+    elif comand == 8:
         workingbolt.viewChannels()
 
-    elif comand is 9:
+    elif comand == 9:
         name = getChannel()
         workingbolt.getFromUser(name)
     else:

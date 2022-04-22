@@ -1,7 +1,6 @@
 import main
 import unittest
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from unittest import TestCase
 import io
 import sys

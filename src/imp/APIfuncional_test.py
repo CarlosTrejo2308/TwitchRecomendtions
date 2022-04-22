@@ -46,10 +46,9 @@ class TestApi(unittest.TestCase):
         prueba = apiTwitch()
         resultados = ["albertto1198", "keriosriven", "ag_bean3r"]
         id_nombres = ["118237854", "118974117", "28344564"]
-        for k in range(len(id_nombres)):
-            salida = resultados[k]
+        for k in range(len(id_nombres)):            
             salida_actual = prueba.get_name(id_nombres[k])
-            salida_esperada = salida
+            salida_esperada = resultados[k]
             self.assertAlmostEqual(salida_actual, salida_esperada)
 
 
