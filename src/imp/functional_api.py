@@ -21,7 +21,7 @@ class FunctionalTwitch:
         check_status_code = (request.status_code == 400)
         if check_status_code:
             raise UserNotFoundError(username)
-        
+
         is_list_empty = request.json()["data"]
         if not is_list_empty:
             raise UserNotFoundError(username)
@@ -41,7 +41,7 @@ class FunctionalTwitch:
         check_status_code = (request.status_code == 400)
         if check_status_code:
             raise UserIDNotFoundError(user_id)
-        
+
         is_list_empty = request.json()["data"]
         if not is_list_empty:
             raise UserIDNotFoundError(user_id)

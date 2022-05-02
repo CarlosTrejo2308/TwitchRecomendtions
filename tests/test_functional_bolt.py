@@ -1,103 +1,94 @@
+from matplotlib import testing
 import load_path
 from src.imp.functional_api import FunctionalTwitch
 from src.imp.functional_bolt import FunctionalBolt
-from src.imp import Channel
-
+from src.imp.channel import Channel
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
 
 class TestBolt(unittest.TestCase):
 
     def setUp(self):
-        # Channels
-        self.ch1 = Channel(12)
-        self.ch2 = Channel(13, 10)
-        self.ch3 = Channel(14, name="Carlos")
-        self.ch4 = Channel(15, name="Roberto")
-        self.ch5 = Channel(16, 15, name="Rodrigo")
-        self.ch6 = Channel(17, 20, name="Jesus")
-        self.ch7 = Channel(18, 1, name="Chuy")
-        self.ch8 = Channel(19, 7, name="Lupe")
-        self.channels = [self.ch1, self.ch2, self.ch3,
-                         self.ch4, self.ch5, self.ch6, self.ch7, self.ch8]
-        self.apireturn = [["Carlos", 1], ["Roberto", 2], ["Rodrigo", 3], ["Jesus", 4],
-                          ["Ricardo", 5], ["Chuy", 6], ["Lupe", 7], ["Ricardo", 8]]
+        functional_api = FunctionalTwitch()
+        self.testing_bolt = FunctionalBolt(functional_api)
 
-        # Bolt
-        # Need to patch..?
-        api = FunctionalTwitch()
-        self.testingBolt = Bolt(api, "bd")
+    @patch("builtins.print")
+    @patch.object(FunctionalTwitch, "get_user_id")
+    def test_add_channel(self, mock_get_user_id, mock_print):
+        test_cases = [
+            Channel("83232866", "ibai"),
+            Channel("459331509", "auronplay"),
+            Channel("197855687", "fernanfloo"),
+            Channel("121510236", "juansguarnizo"),
+            Channel("76385901", "elded"),
+        ]
 
-    def testAddCHannel(self):
+        for expected_channel in test_cases:
+            expected_name = expected_channel.name
+            expected_user_id = expected_channel.id
+            mock_get_user_id.return_value = expected_user_id
 
-        for r in range(len(self.apireturn)):
-            with self.subTest(r=r):
-                self.testingBolt.api.get_userid = MagicMock(
-                    return_value=self.apireturn[r][1])
+            self.testing_bolt.add_channel(expected_name)
+            channel = self.testing_bolt._channels[expected_name]
 
-                self.testingBolt.addChanel(self.apireturn[r][0])
+            with self.subTest(expected_user_id=expected_user_id):
+                self.assertEqual(channel._id, expected_user_id)
 
-                for l in range(0, r):
-                    chan = self.testingBolt.ls_channel[l]
-                    name = chan.name
-                    id = chan.id
+            with self.subTest(expected_name=expected_name):
+                self.assertEqual(channel._name, expected_name)
 
-                    self.assertEqual(name, self.apireturn[l][0])
-                    self.assertEqual(id, self.apireturn[l][1])
-        return self.testingBolt
+            mock_get_user_id.assert_called_once_with(expected_name)
+            mock_get_user_id.reset_mock()
 
-    def testRemoveChanel(self):
-        self.testingBolt.ls_channel = self.channels[2:]
+    @patch("builtins.print")
+    def test_remove_channel(self, mock_print):
+        self.testing_bolt.add_channel("ibai")
+        self.testing_bolt.add_channel("auronplay")
+        self.testing_bolt.add_channel("fernanfloo")
+        self.testing_bolt.add_channel("elded")
 
-        for r in range(len(self.channels[2:0]) - 1, -1, -1):
-            with self.subTest(r=r):
-                nametor = self.channels[r]._name
-                self.testingBolt.removeChanel(nametor)
-                self.channels.pop(r)
+        test_cases = [
+            "ibai",
+            "fernanfloo",
+            "ibai",
+            "auronplay"
+        ]
 
-                self.assertEqual(self.testingBolt.ls_channel, self.channels)
+        for username in test_cases:
+            if username in self.testing_bolt._channels.keys():
+                msg = f"-- channel {username} was removed successfully."
+            else:
+                msg = f"!! channel {username} wasn't found in the channel list!"
 
-    def testBlockChannel(self):
-        self.testingBolt.ls_channel = self.channels[2:]
-        for r in range(len(self.channels[2:0]) - 1, -1, -1):
-            with self.subTest(r=r):
-                nametor = self.channels[r]._name
-                self.testingBolt.blockChanel(nametor)
-                self.channels[r].block(True)
+            self.testing_bolt.remove_channel(username)
+            with self.subTest(expected_msg=msg):
+                mock_print.assert_called_with(msg)
 
-                self.assertEqual(self.testingBolt.ls_channel, self.channels)
+            self.assertNotIn(username, self.testing_bolt._channels.keys())
 
-    def testCalculate(self):
-        self.testingBolt.ls_channel = self.channels[2:4]
-        flowee = [5, 200]
-        followers = [[self.ch7._id, self.ch8._id],
-                     [self.ch8._id, self.ch6._id]]
-        get_name = [self.ch7._name, self.ch8._name, self.ch6._name]
+    @patch("builtins.print")
+    def test_block_channel(self, mock_print):
+        self.testing_bolt.add_channel("auronplay")
+        self.testing_bolt.add_channel("juansguarnizo")
+        self.testing_bolt.add_channel("elded")
 
-        mockfolowee = MagicMock()
-        mockfolowers = MagicMock()
-        mockgetname = MagicMock()
+        self.testing_bolt.block_channel("juansguarnizo")
+        self.testing_bolt.block_channel("elded")
 
-        mockfolowee.side_effect = flowee
-        mockfolowers.side_effect = followers
-        mockgetname.side_effect = get_name
+        test_cases = [
+            ("auronplay", False),
+            ("juansguarnizo", True),
+            ("elded", True),
+        ]
 
-        self.testingBolt.api.get_followe = mockfolowee
-        self.testingBolt.api.get_followers = mockfolowers
-        self.testingBolt.api.get_name = mockgetname
+        for username, block_expected in test_cases:
+            is_blocked = self.testing_bolt._channels[username].is_blocked
 
-        self.testingBolt.calculate()
-        self.testingBolt.printRecomendations()
-
-        expected = [self.ch8, self.ch6, self.ch7]
-        obtained = self.testingBolt.ls_recomendated
-        obtained.sort(key=lambda x: x._ponderation, reverse=True)
-        for r in range(len(expected)):
-            with self.subTest(r=r):
-                self.assertEqual(obtained[r].name, expected[r]._name)
+            with self.subTest(block_expected=block_expected):
+                self.assertEqual(is_blocked, block_expected)
 
 
-if __name__ == '__main__':
-    unittest.main()
+# if __name__ == '__main__':
+#     unittest.main()

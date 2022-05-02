@@ -1,15 +1,15 @@
 from src.imp.base.bolt import APIBolt
 from src.imp.channel import Channel
+
 from src.imp.exceptions import UserNotFoundError
-from src.imp.exceptions import UserIDNotFoundError
 from tqdm import tqdm
 
 
 class FunctionalBolt(APIBolt):
-    def __init__(self, api, database):
-        super().__init__(database)
+    def __init__(self, api):
         self._api = api
         self._recommended = {}
+        self._channels = {}
 
     def add_channel(self, username):
         try:
@@ -22,7 +22,7 @@ class FunctionalBolt(APIBolt):
                 msg = f">> channel {username} is already in the channel list."
 
             print(msg)
-        except UserNotFoundError as err:
+        except UserNotFoundError:
             print(f"!! There's no possible to add an nonexistent channel")
 
     def remove_channel(self, username):
@@ -54,17 +54,7 @@ class FunctionalBolt(APIBolt):
         channels_sorted = sorted(self._recommended.values(),
                                  key=lambda x: x._priority, reverse=True)
         for channel in channels_sorted:
-            print(f"== channel {channel._name}, priority: {channel._priority}")
-
-    def save_session(self, api):
-        # self.api.agregar_usuario(self._channels)
-        # print("Coming soon...")
-        pass
-
-    def load_session(self, api):
-        # self.api.mostrar_usuario()
-        # print("Coming soon...")
-        pass
+            print(f"-> channel {channel._name}, priority: {channel._priority}")
 
 ################################################################################
 
@@ -98,7 +88,7 @@ class FunctionalBolt(APIBolt):
 
             # print(f"\nFrom channel: {channel._name}")
             # print(f"With total followers: {total_followers}")
-            # print(f"With total following: {total_followings}")
+            # print(f"With total followings: {total_followings}")
             # print(f"Channel priority: {channel_priority}")
             for subchannel_name in subchannels_names:
                 # print(f"- add subchannel: {subchannel_name}")

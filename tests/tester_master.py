@@ -9,7 +9,7 @@ sys.path.append(ROOT_DIR)
 # from test.testing_integration import TestIntegration
 from test_functional_api import TestTwitchApi
 from test_channel import TestChannel
-# from test_functional_bolt import TestBolt
+from test_functional_bolt import TestBolt
 
 
 
@@ -17,7 +17,7 @@ from test_channel import TestChannel
 # TestMain()
 TestChannel()
 TestTwitchApi()
-# TestBolt()
+TestBolt()
 
 
 # Int

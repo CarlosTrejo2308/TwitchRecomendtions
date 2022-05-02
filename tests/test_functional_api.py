@@ -164,7 +164,7 @@ class TestTwitchApi(unittest.TestCase):
             # Test Assertions
             with self.subTest(expected_names=expected_names):
                 self.assertEqual(following_names, expected_names)
-                
+
             mock_get_user_id.assert_called_with(username)
             mock_requests_get.assert_called_once_with(
                 url=URL,

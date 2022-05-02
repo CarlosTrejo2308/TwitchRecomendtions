@@ -2,11 +2,9 @@
 import load_path
 from imp.functional_bolt import FunctionalBolt
 from imp.functional_api import FunctionalTwitch
-from imp.basedatos import database
 
 working_api = FunctionalTwitch()
-db_connection = database()
-functional_bolt = FunctionalBolt(working_api, db_connection)
+functional_bolt = FunctionalBolt(working_api)
 
 
 def get_options():
@@ -16,8 +14,6 @@ def get_options():
     msg += "3. Block Channel\n"
     msg += "4. View Channels\n"
     msg += "5. Get Recommendations\n"
-    msg += "6. Save Options\n"
-    msg += "7. Load Options"
     return msg
 
 
@@ -61,12 +57,6 @@ def do_action(comand):
 
     elif comand == 5:
         functional_bolt.show_recommendations()
-
-    elif comand == 6:
-        db_connection.save_list(functional_bolt.ls_channel)
-
-    elif comand == 7:
-        functional_bolt.ls_channel = db_connection.get_list()
 
     else:
         print("Out of Bounds!\n")

@@ -5,6 +5,18 @@ class Channel:
         self._priority = priority
         self._is_blocked = False
 
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def is_blocked(self):
+        return self._is_blocked
+
     def increase_priority(self, num):
         if not self._is_blocked:
             self._priority += num
