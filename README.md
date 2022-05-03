@@ -1,4 +1,4 @@
-# TwitchRecomendtions
+# TwitchRecommendations
 Twitch Recommendations takes the name of the user name, and based on the stremers he follows, it will return at list of other streames that he might be interrested in following.
 
 ## How does it work?
